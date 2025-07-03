@@ -7,7 +7,12 @@
     "start": "node bot.js",
     "dev": "nodemon bot.js",
     "setup": "node setup.js",
-    "install-all": "npm install && npm run setup"
+    "install-all": "npm install && npm run setup",
+    "build": "echo 'Build completed for Vercel'",
+    "vercel-dev": "vercel dev",
+    "deploy": "vercel --prod",
+    "test": "node test-vercel-apis.js",
+    "test:prod": "node test-vercel-apis.js https://your-app.vercel.app"
   },
   "keywords": [
     "whatsapp",
@@ -29,9 +34,14 @@
     "dotenv": "^16.3.1",
     "chalk": "^4.1.2",
     "figlet": "^1.7.0",
-    "gradient-string": "^2.0.2"
+    "gradient-string": "^2.0.2",
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.1",
+    "vercel": "^33.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

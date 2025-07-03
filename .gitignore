@@ -46,3 +46,12 @@ build/
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Vercel
+.vercel
+.vercel.json
+*.vercel.app
+
+# Tests et développement
+test-results/
+coverage/
