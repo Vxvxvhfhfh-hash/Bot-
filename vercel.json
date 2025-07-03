@@ -3,6 +3,10 @@
   "name": "whatsapp-rp-bot",
   "builds": [
     {
+      "src": "package.json",
+      "use": "@vercel/next"
+    },
+    {
       "src": "api/**/*.js",
       "use": "@vercel/node"
     }
