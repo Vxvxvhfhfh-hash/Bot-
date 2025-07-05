@@ -13,7 +13,7 @@ const gradient = require('gradient-string');
 // ═══════════════════════════════════════════════════════════════════════════════
 
 const config = {
-    geminiApiKey: process.env.GEMINI_API_KEY,
+    geminiApiKey: process.env.GEMINI_API_KEY,AIzaSyAZ2kEdV2msOk_oGozkExOXfxEaudOUFOA
     botName: process.env.BOT_NAME || '🎭 RP Master Bot',
     rpWorld: process.env.RP_WORLD || 'Cyberpunk 2077',
     defaultCharacter: process.env.DEFAULT_CHARACTER || 'Assistant IA Futuriste',
