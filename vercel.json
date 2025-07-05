@@ -1,0 +1,43 @@
+{
+  "version": 2,
+  "name": "whatsapp-rp-bot",
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/next"
+    },
+    {
+      "src": "api/**/*.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "/webhook",
+      "dest": "/api/webhook"
+    },
+    {
+      "src": "/",
+      "dest": "/api/status"
+    }
+  ],
+  "env": {
+    "GEMINI_API_KEY": "@gemini_api_key",
+    "BOT_NAME": "@bot_name",
+    "RP_WORLD": "@rp_world",
+    "DEFAULT_CHARACTER": "@default_character",
+    "ENABLE_MEDIA_RESPONSES": "@enable_media_responses",
+    "DEBUG_MODE": "@debug_mode",
+    "AUTO_REPLY_DELAY": "@auto_reply_delay",
+    "MAX_MESSAGE_LENGTH": "@max_message_length"
+  },
+  "functions": {
+    "api/**/*.js": {
+      "maxDuration": 30
+    }
+  }
+}
