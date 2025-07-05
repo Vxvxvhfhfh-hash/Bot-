@@ -1,0 +1,24 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "installCommand": "npm install",
+  "builds": [
+    {
+      "src": "app/api/**/*.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "env": {
+    "OPENAI_API_KEY": "@openai_api_key",
+    "GOOGLE_SEARCH_API_KEY": "@google_search_api_key",
+    "GOOGLE_SEARCH_ENGINE_ID": "@google_search_engine_id"
+  },
+  "build": {
+    "env": {
+      "OPENAI_API_KEY": "@openai_api_key",
+      "GOOGLE_SEARCH_API_KEY": "@google_search_api_key",
+      "GOOGLE_SEARCH_ENGINE_ID": "@google_search_engine_id"
+    }
+  }
+}
