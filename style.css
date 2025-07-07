@@ -6,9 +6,10 @@
 
 body {
     font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
     min-height: 100vh;
     overflow: hidden;
+    color: white;
 }
 
 #game-container {
@@ -19,37 +20,168 @@ body {
 #game-world {
     flex: 2;
     position: relative;
-    background: #1a1a1a;
-    border-right: 3px solid #4a5568;
+    background: #0a0a0a;
+    border-right: 3px solid #ff6b35;
+    overflow: hidden;
+}
+
+#game-ui {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    z-index: 100;
+    pointer-events: none;
+}
+
+/* Barres de vie et d'énergie */
+.bar-container {
+    position: relative;
+    width: 250px;
+    height: 30px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #fff;
+    border-radius: 15px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    border-radius: 13px;
+    transition: width 0.5s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.health-fill {
+    background: linear-gradient(90deg, #ff4757, #ff6b35);
+    box-shadow: 0 0 20px rgba(255, 71, 87, 0.5);
+    width: 100%;
+}
+
+.enemy-fill {
+    background: linear-gradient(90deg, #e74c3c, #c0392b);
+    box-shadow: 0 0 20px rgba(231, 76, 60, 0.5);
+    width: 100%;
+}
+
+.bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shine 2s infinite;
+}
+
+@keyframes shine {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.bar-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    font-size: 14px;
+    z-index: 2;
+}
+
+#enemy-health-bar {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#power-indicator {
+    position: absolute;
+    top: 80px;
+    left: 0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.power-orb {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #74b9ff, #0984e3);
+    border: 3px solid #fff;
+    box-shadow: 0 0 30px rgba(116, 185, 255, 0.8);
+    animation: pulse-orb 2s infinite ease-in-out;
+    position: relative;
+}
+
+.power-orb::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.6);
+    animation: glow 1.5s infinite ease-in-out alternate;
+}
+
+@keyframes pulse-orb {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+@keyframes glow {
+    0% { opacity: 0.3; }
+    100% { opacity: 1; }
+}
+
+#power-text {
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    color: #74b9ff;
 }
 
 #ui-panel {
     flex: 1;
-    background: rgba(255, 255, 255, 0.95);
+    background: linear-gradient(135deg, rgba(26, 26, 46, 0.95), rgba(15, 52, 96, 0.95));
     padding: 20px;
-    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
     overflow-y: auto;
     backdrop-filter: blur(10px);
+    border-left: 2px solid #ff6b35;
 }
 
 h1 {
-    color: #2d3748;
+    color: #ff6b35;
     margin-bottom: 20px;
     text-align: center;
-    font-size: 1.5em;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+    font-size: 1.8em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    animation: title-glow 3s infinite ease-in-out alternate;
+}
+
+@keyframes title-glow {
+    0% { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 107, 53, 0.3); }
+    100% { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 107, 53, 0.8); }
 }
 
 #instructions {
-    background: #f7fafc;
+    background: rgba(255, 255, 255, 0.1);
     padding: 15px;
     border-radius: 10px;
     margin-bottom: 20px;
-    border-left: 4px solid #667eea;
+    border: 2px solid #74b9ff;
+    backdrop-filter: blur(5px);
 }
 
 #instructions p {
-    color: #4a5568;
+    color: #74b9ff;
     margin-bottom: 10px;
     font-weight: bold;
 }
@@ -60,18 +192,20 @@ h1 {
 }
 
 #instructions li {
-    color: #2d3748;
+    color: #fff;
     margin-bottom: 8px;
-    padding: 5px 10px;
-    background: white;
-    border-radius: 5px;
-    border-left: 3px solid #68d391;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    border-left: 4px solid #ff6b35;
     transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
 }
 
 #instructions li:hover {
     transform: translateX(5px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 107, 53, 0.2);
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
 }
 
 #input-section {
@@ -82,72 +216,170 @@ h1 {
 
 #action-input {
     flex: 1;
-    padding: 12px;
-    border: 2px solid #e2e8f0;
-    border-radius: 8px;
+    padding: 15px;
+    border: 2px solid #74b9ff;
+    border-radius: 10px;
     font-size: 16px;
     outline: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
     transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+#action-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
 }
 
 #action-input:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: #ff6b35;
+    box-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
+    background: rgba(255, 255, 255, 0.15);
 }
 
 #execute-btn {
-    padding: 12px 20px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 15px 25px;
+    background: linear-gradient(135deg, #ff6b35, #ff4757);
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
     font-weight: bold;
+    font-size: 16px;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+    text-transform: uppercase;
 }
 
 #execute-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(255, 107, 53, 0.6);
+    background: linear-gradient(135deg, #ff4757, #ff3742);
 }
 
 #execute-btn:active {
-    transform: translateY(0);
+    transform: translateY(-1px);
 }
 
 #feedback {
-    background: #edf2f7;
+    background: rgba(255, 255, 255, 0.1);
     padding: 15px;
     border-radius: 10px;
-    border-left: 4px solid #38b2ac;
+    border: 2px solid #74b9ff;
+    margin-bottom: 20px;
+    backdrop-filter: blur(5px);
 }
 
 #last-action {
-    color: #2d3748;
+    color: #fff;
     font-weight: bold;
+    text-align: center;
+    font-size: 16px;
+}
+
+#combat-log {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    border-radius: 10px;
+    border: 2px solid #ff6b35;
+    max-height: 200px;
+    overflow-y: auto;
+    backdrop-filter: blur(5px);
+}
+
+#combat-log h3 {
+    color: #ff6b35;
+    margin-bottom: 10px;
     text-align: center;
 }
 
-/* Animation pour les retours visuels */
-.action-feedback {
-    animation: pulse 0.6s ease-in-out;
+#log-content {
+    font-size: 14px;
+    line-height: 1.4;
 }
 
-@keyframes pulse {
+.log-entry {
+    margin-bottom: 8px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.1);
+    animation: log-appear 0.5s ease-out;
+}
+
+@keyframes log-appear {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.log-damage {
+    border-left: 4px solid #e74c3c;
+    color: #ff6b6b;
+}
+
+.log-heal {
+    border-left: 4px solid #00b894;
+    color: #00d2d3;
+}
+
+.log-power {
+    border-left: 4px solid #74b9ff;
+    color: #a29bfe;
+}
+
+.log-info {
+    border-left: 4px solid #fdcb6e;
+    color: #fdcb6e;
+}
+
+/* Animations de feedback */
+.action-feedback {
+    animation: combat-pulse 0.6s ease-in-out;
+}
+
+@keyframes combat-pulse {
     0% { transform: scale(1); }
     50% { transform: scale(1.05); }
     100% { transform: scale(1); }
 }
 
 .success {
-    background: #c6f6d5 !important;
-    border-left-color: #38a169 !important;
+    background: rgba(0, 184, 148, 0.3) !important;
+    border-color: #00b894 !important;
+    box-shadow: 0 0 20px rgba(0, 184, 148, 0.5);
 }
 
 .error {
-    background: #fed7d7 !important;
-    border-left-color: #e53e3e !important;
+    background: rgba(231, 76, 60, 0.3) !important;
+    border-color: #e74c3c !important;
+    box-shadow: 0 0 20px rgba(231, 76, 60, 0.5);
+}
+
+.critical {
+    background: rgba(255, 107, 53, 0.4) !important;
+    border-color: #ff6b35 !important;
+    box-shadow: 0 0 25px rgba(255, 107, 53, 0.7);
+    animation: critical-hit 0.8s ease-out;
+}
+
+@keyframes critical-hit {
+    0% { 
+        transform: scale(1);
+        box-shadow: 0 0 25px rgba(255, 107, 53, 0.7);
+    }
+    25% { 
+        transform: scale(1.1);
+        box-shadow: 0 0 40px rgba(255, 107, 53, 1);
+    }
+    100% { 
+        transform: scale(1);
+        box-shadow: 0 0 25px rgba(255, 107, 53, 0.7);
+    }
 }
 
 /* Responsive design */
@@ -159,11 +391,62 @@ h1 {
     #game-world {
         flex: 1;
         border-right: none;
-        border-bottom: 3px solid #4a5568;
+        border-bottom: 3px solid #ff6b35;
     }
     
     #ui-panel {
         flex: none;
-        height: 300px;
+        height: 350px;
+    }
+    
+    .bar-container {
+        width: 200px;
+    }
+    
+    #game-ui {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+    }
+}
+
+/* Effets de particules et d'éclairs pour les attaques */
+.lightning-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 48%, #74b9ff 49%, #0984e3 50%, #74b9ff 51%, transparent 52%);
+    animation: lightning-flash 0.3s ease-out;
+    pointer-events: none;
+    z-index: 50;
+}
+
+@keyframes lightning-flash {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 0.8; }
+}
+
+.fire-effect {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle, rgba(255, 107, 53, 0.6), rgba(255, 71, 87, 0.4), transparent);
+    animation: fire-burst 0.8s ease-out;
+    pointer-events: none;
+    z-index: 50;
+}
+
+@keyframes fire-burst {
+    0% { 
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% { 
+        transform: scale(2);
+        opacity: 0;
     }
 }

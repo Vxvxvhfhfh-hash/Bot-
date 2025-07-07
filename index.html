@@ -3,36 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jeu 3D - Contrôle par Texte</title>
+    <title>Combat Arena 3D - Pouvoirs Épiques</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
     <div id="game-container">
-        <div id="game-world"></div>
+        <div id="game-world">
+            <div id="game-ui">
+                <div id="health-bar">
+                    <div class="bar-container">
+                        <div class="bar-fill health-fill" id="player-health"></div>
+                        <span class="bar-text">Héros: <span id="player-hp">100</span>/100</span>
+                    </div>
+                </div>
+                <div id="enemy-health-bar">
+                    <div class="bar-container">
+                        <div class="bar-fill enemy-fill" id="enemy-health"></div>
+                        <span class="bar-text">Ennemi: <span id="enemy-hp">100</span>/100</span>
+                    </div>
+                </div>
+                <div id="power-indicator">
+                    <div class="power-orb" id="power-orb"></div>
+                    <span id="power-text">Énergie: <span id="power-level">100</span>%</span>
+                </div>
+            </div>
+        </div>
         <div id="ui-panel">
-            <h1>Contrôlez votre personnage 3D</h1>
+            <h1>⚔️ Combat Arena 3D</h1>
             <div id="instructions">
-                <p>Tapez vos actions pour faire bouger le personnage :</p>
+                <p>🔥 <strong>Commandes de Combat :</strong></p>
                 <ul>
-                    <li><strong>avancer</strong> ou <strong>aller devant</strong> - Le personnage avance</li>
-                    <li><strong>reculer</strong> ou <strong>aller derrière</strong> - Le personnage recule</li>
-                    <li><strong>gauche</strong> ou <strong>aller à gauche</strong> - Le personnage va à gauche</li>
-                    <li><strong>droite</strong> ou <strong>aller à droite</strong> - Le personnage va à droite</li>
-                    <li><strong>sauter</strong> ou <strong>faire un saut</strong> - Le personnage saute</li>
-                    <li><strong>tourner</strong> - Le personnage tourne sur lui-même</li>
-                    <li><strong>danser</strong> - Le personnage danse</li>
+                    <li><strong>attaquer</strong> / <strong>frapper</strong> - Attaque physique</li>
+                    <li><strong>boule de feu</strong> / <strong>fireball</strong> - Sort de feu</li>
+                    <li><strong>éclair</strong> / <strong>lightning</strong> - Attaque électrique</li>
+                    <li><strong>bouclier</strong> / <strong>défense</strong> - Protection magique</li>
+                    <li><strong>téléportation</strong> / <strong>dash</strong> - Déplacement rapide</li>
+                    <li><strong>soin</strong> / <strong>heal</strong> - Récupération HP</li>
+                    <li><strong>nova</strong> / <strong>explosion</strong> - Attaque de zone</li>
+                    <li><strong>ultimate</strong> / <strong>pouvoir final</strong> - Super attaque</li>
+                </ul>
+                <p>🎯 <strong>Mouvements :</strong></p>
+                <ul>
+                    <li><strong>avancer</strong>, <strong>reculer</strong>, <strong>gauche</strong>, <strong>droite</strong></li>
+                    <li><strong>sauter</strong>, <strong>esquiver</strong>, <strong>roulade</strong></li>
                 </ul>
             </div>
             <div id="input-section">
-                <input type="text" id="action-input" placeholder="Tapez votre action ici..." autofocus>
-                <button id="execute-btn">Exécuter</button>
+                <input type="text" id="action-input" placeholder="Tapez votre action de combat..." autofocus>
+                <button id="execute-btn">🔥 Exécuter</button>
             </div>
             <div id="feedback">
-                <p id="last-action">Aucune action encore...</p>
+                <p id="last-action">Prêt au combat !</p>
+            </div>
+            <div id="combat-log">
+                <h3>📜 Journal de Combat</h3>
+                <div id="log-content"></div>
             </div>
         </div>
     </div>
-    <script src="script.js"></script>
+    <script src="combat-script.js"></script>
 </body>
 </html>
