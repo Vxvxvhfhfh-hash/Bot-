@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
+    <title>📱 Combat Mobile 3D - Android</title>
+    <link rel="stylesheet" href="mobile-style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- PWA Meta tags -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#1a1a2e">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Prevent zoom and selection -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <style>
+        * { 
+            -webkit-user-select: none; 
+            -webkit-touch-callout: none; 
+            -webkit-tap-highlight-color: transparent;
+        }
+        body { 
+            touch-action: none; 
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h2>🎮 Chargement du Combat Mobile</h2>
+            <p>Optimisation pour Android en cours...</p>
+            <div class="loading-bar">
+                <div class="loading-progress" id="loading-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Game Container -->
+    <div id="game-container" style="display: none;">
+        <!-- 3D Game World -->
+        <div id="game-world"></div>
+        
+        <!-- Mobile HUD -->
+        <div id="mobile-hud">
+            <!-- Top Status Bar -->
+            <div id="status-bar">
+                <div class="stat-group">
+                    <div class="stat-icon">❤️</div>
+                    <div class="stat-bar">
+                        <div class="stat-fill health-fill" id="player-health"></div>
+                        <span class="stat-text" id="player-hp">100</span>
+                    </div>
+                </div>
+                <div class="stat-group">
+                    <div class="stat-icon">⚡</div>
+                    <div class="stat-bar">
+                        <div class="stat-fill mana-fill" id="player-mana"></div>
+                        <span class="stat-text" id="player-mana-num">100</span>
+                    </div>
+                </div>
+                <div class="level-display">
+                    <span class="level-icon">⭐</span>
+                    <span class="level-text" id="player-level">1</span>
+                </div>
+            </div>
+
+            <!-- Action Feedback -->
+            <div id="action-feedback">
+                <div id="damage-numbers"></div>
+                <div id="action-text">Touchez pour commencer !</div>
+            </div>
+
+            <!-- Enemy Health (when in combat) -->
+            <div id="enemy-health-display" style="display: none;">
+                <div class="enemy-health-bar">
+                    <div class="enemy-health-fill" id="enemy-health"></div>
+                    <span class="enemy-health-text">Démon: <span id="enemy-hp">100</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Virtual Controls -->
+        <div id="virtual-controls">
+            <!-- Movement Joystick (Left) -->
+            <div id="movement-joystick" class="joystick-container">
+                <div class="joystick-base">
+                    <div class="joystick-knob" id="movement-knob"></div>
+                </div>
+                <div class="joystick-label">Mouvement</div>
+            </div>
+
+            <!-- Camera Joystick (Right) -->
+            <div id="camera-joystick" class="joystick-container">
+                <div class="joystick-base">
+                    <div class="joystick-knob" id="camera-knob"></div>
+                </div>
+                <div class="joystick-label">Caméra</div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div id="action-buttons">
+                <!-- Primary Actions -->
+                <button class="action-btn primary" id="attack-btn" data-action="attack">
+                    <div class="btn-icon">⚔️</div>
+                    <div class="btn-label">Attaque</div>
+                </button>
+                
+                <button class="action-btn secondary" id="magic-btn" data-action="magic">
+                    <div class="btn-icon">🔥</div>
+                    <div class="btn-label">Magie</div>
+                </button>
+                
+                <button class="action-btn utility" id="jump-btn" data-action="jump">
+                    <div class="btn-icon">⬆️</div>
+                    <div class="btn-label">Saut</div>
+                </button>
+                
+                <button class="action-btn defensive" id="shield-btn" data-action="shield">
+                    <div class="btn-icon">🛡️</div>
+                    <div class="btn-label">Bouclier</div>
+                </button>
+
+                <!-- Special Actions -->
+                <button class="action-btn special" id="heal-btn" data-action="heal">
+                    <div class="btn-icon">💚</div>
+                    <div class="btn-label">Soin</div>
+                </button>
+                
+                <button class="action-btn ultimate" id="ultimate-btn" data-action="ultimate">
+                    <div class="btn-icon">💥</div>
+                    <div class="btn-label">Ultimate</div>
+                </button>
+            </div>
+
+            <!-- Quick Actions Swipe Area -->
+            <div id="quick-actions">
+                <div class="swipe-indicator">
+                    <span>⬅️ Glissez pour plus d'actions ➡️</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Menu -->
+        <div id="settings-menu" style="display: none;">
+            <div class="settings-content">
+                <h3>⚙️ Paramètres</h3>
+                
+                <div class="setting-item">
+                    <label>Sensibilité caméra</label>
+                    <input type="range" id="camera-sensitivity" min="0.5" max="3" value="1.5" step="0.1">
+                </div>
+                
+                <div class="setting-item">
+                    <label>Taille des boutons</label>
+                    <input type="range" id="button-size" min="0.8" max="1.5" value="1" step="0.1">
+                </div>
+                
+                <div class="setting-item">
+                    <label>Qualité graphique</label>
+                    <select id="graphics-quality">
+                        <option value="low">Économie batterie</option>
+                        <option value="medium" selected>Équilibré</option>
+                        <option value="high">Haute qualité</option>
+                    </select>
+                </div>
+                
+                <div class="setting-item">
+                    <label>Vibrations</label>
+                    <input type="checkbox" id="vibration-enabled" checked>
+                </div>
+                
+                <div class="setting-buttons">
+                    <button class="settings-btn" onclick="mobileGame.applySettings()">Appliquer</button>
+                    <button class="settings-btn" onclick="mobileGame.closeSettings()">Fermer</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Button -->
+        <button id="menu-btn" onclick="mobileGame.toggleSettings()">⚙️</button>
+
+        <!-- Text Input Modal -->
+        <div id="text-modal" style="display: none;">
+            <div class="text-modal-content">
+                <h3>💬 Commande Vocale/Texte</h3>
+                <input type="text" id="text-command" placeholder="Tapez votre action..." maxlength="50">
+                <div class="text-suggestions">
+                    <button onclick="mobileGame.executeTextCommand('attaquer')">⚔️ Attaquer</button>
+                    <button onclick="mobileGame.executeTextCommand('boule de feu')">🔥 Feu</button>
+                    <button onclick="mobileGame.executeTextCommand('soin')">💚 Soin</button>
+                    <button onclick="mobileGame.executeTextCommand('ultimate')">💥 Ultimate</button>
+                </div>
+                <div class="text-modal-buttons">
+                    <button onclick="mobileGame.executeTextCommand()">Exécuter</button>
+                    <button onclick="mobileGame.closeTextModal()">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Orientation Warning -->
+    <div id="orientation-warning" style="display: none;">
+        <div class="orientation-content">
+            <div class="orientation-icon">📱</div>
+            <h2>Tournez votre appareil</h2>
+            <p>Ce jeu fonctionne mieux en mode paysage</p>
+        </div>
+    </div>
+
+    <script src="mobile-game.js"></script>
+</body>
+</html>

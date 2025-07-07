@@ -49,7 +49,7 @@
 
         .games-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 30px;
             margin-bottom: 40px;
         }
@@ -195,6 +195,22 @@
                     <li>Mode texte + contrôles</li>
                 </ul>
             </div>
+            
+            <div class="game-card mobile" onclick="location.href='mobile.html'">
+                <span class="game-icon">📱</span>
+                <h2 class="game-title">Version Mobile Android</h2>
+                <p class="game-description">
+                    Combat tactile optimisé pour smartphones avec joysticks virtuels !
+                </p>
+                <ul class="game-features">
+                    <li>Joysticks virtuels fluides</li>
+                    <li>Boutons d'action tactiles</li>
+                    <li>Retour haptique (vibrations)</li>
+                    <li>Interface mobile adaptive</li>
+                    <li>Paramètres d'optimisation</li>
+                    <li>Mode portrait/paysage</li>
+                </ul>
+            </div>
         </div>
         
         <div class="controls-hint">
@@ -202,6 +218,7 @@
             <p>
                 <strong>Manette :</strong> Stick gauche (mouvement), Stick droit (caméra), A/X (saut), B/Carré (attaque), Y/Triangle (magie)<br>
                 <strong>Clavier :</strong> WASD (mouvement), Souris (caméra), Espace (saut), Clic (attaque), E (magie)<br>
+                <strong>Mobile :</strong> Joysticks virtuels, boutons tactiles, double-tap (commandes texte)<br>
                 <strong>Texte :</strong> Tapez vos actions en français comme "attaquer", "boule de feu", "soin"
             </p>
         </div>
