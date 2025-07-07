@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeu 3D - Contrôle par Texte</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <div id="game-container">
+        <div id="game-world"></div>
+        <div id="ui-panel">
+            <h1>Contrôlez votre personnage 3D</h1>
+            <div id="instructions">
+                <p>Tapez vos actions pour faire bouger le personnage :</p>
+                <ul>
+                    <li><strong>avancer</strong> ou <strong>aller devant</strong> - Le personnage avance</li>
+                    <li><strong>reculer</strong> ou <strong>aller derrière</strong> - Le personnage recule</li>
+                    <li><strong>gauche</strong> ou <strong>aller à gauche</strong> - Le personnage va à gauche</li>
+                    <li><strong>droite</strong> ou <strong>aller à droite</strong> - Le personnage va à droite</li>
+                    <li><strong>sauter</strong> ou <strong>faire un saut</strong> - Le personnage saute</li>
+                    <li><strong>tourner</strong> - Le personnage tourne sur lui-même</li>
+                    <li><strong>danser</strong> - Le personnage danse</li>
+                </ul>
+            </div>
+            <div id="input-section">
+                <input type="text" id="action-input" placeholder="Tapez votre action ici..." autofocus>
+                <button id="execute-btn">Exécuter</button>
+            </div>
+            <div id="feedback">
+                <p id="last-action">Aucune action encore...</p>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
