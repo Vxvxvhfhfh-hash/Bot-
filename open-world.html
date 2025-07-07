@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌍 Monde Ouvert 3D - Aventure Épique</title>
+    <link rel="stylesheet" href="open-world-style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <div id="game-container">
+        <div id="game-world">
+            <!-- HUD de jeu en surimpression -->
+            <div id="game-hud">
+                <!-- Informations du joueur -->
+                <div id="player-info">
+                    <div class="info-panel">
+                        <div class="bar-container mini">
+                            <div class="bar-fill health-fill" id="player-health"></div>
+                            <span class="bar-text">❤️ <span id="player-hp">100</span></span>
+                        </div>
+                        <div class="bar-container mini">
+                            <div class="bar-fill mana-fill" id="player-mana"></div>
+                            <span class="bar-text">⚡ <span id="player-mana-num">100</span></span>
+                        </div>
+                        <div class="bar-container mini">
+                            <div class="bar-fill exp-fill" id="player-exp"></div>
+                            <span class="bar-text">⭐ Niv. <span id="player-level">1</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mini-carte -->
+                <div id="minimap">
+                    <canvas id="minimap-canvas" width="150" height="150"></canvas>
+                    <div class="minimap-title">📍 Carte</div>
+                </div>
+
+                <!-- Contrôles -->
+                <div id="controls-info">
+                    <div class="control-panel">
+                        <h3>🎮 Contrôles</h3>
+                        <div class="control-section">
+                            <strong>Joystick :</strong><br>
+                            • Stick gauche : Déplacement<br>
+                            • Stick droit : Caméra<br>
+                            • A/X : Saut<br>
+                            • B/Carré : Attaque<br>
+                            • Y/Triangle : Magie<br>
+                            • LB/L1 : Esquive<br>
+                            • RB/R1 : Bouclier<br>
+                        </div>
+                        <div class="control-section">
+                            <strong>Clavier :</strong><br>
+                            • WASD : Déplacement<br>
+                            • Souris : Caméra<br>
+                            • Espace : Saut<br>
+                            • Clic gauche : Attaque<br>
+                            • E : Magie<br>
+                            • Shift : Course<br>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat/Actions -->
+                <div id="action-panel">
+                    <div id="action-display"></div>
+                    <input type="text" id="text-input" placeholder="Tapez vos actions magiques..." style="display: none;">
+                </div>
+
+                <!-- Gamepad status -->
+                <div id="gamepad-status">
+                    <div id="gamepad-indicator">🎮 <span id="gamepad-text">Connectez une manette</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interface latérale (réduite) -->
+        <div id="side-panel" class="minimized">
+            <button id="panel-toggle">📋</button>
+            <div id="panel-content">
+                <h2>🗡️ Aventure Épique</h2>
+                
+                <div id="quest-log">
+                    <h3>📜 Quêtes</h3>
+                    <div id="quest-list">
+                        <div class="quest-item active">
+                            <strong>🐉 Éliminer les Démons</strong><br>
+                            <small>Tuez 5 démons dans la région</small>
+                            <div class="quest-progress">0/5</div>
+                        </div>
+                        <div class="quest-item">
+                            <strong>💎 Collecter des Cristaux</strong><br>
+                            <small>Trouvez 3 cristaux de pouvoir</small>
+                            <div class="quest-progress">0/3</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="inventory">
+                    <h3>🎒 Inventaire</h3>
+                    <div id="item-grid">
+                        <div class="item-slot"><span class="item">⚔️</span></div>
+                        <div class="item-slot"><span class="item">🛡️</span></div>
+                        <div class="item-slot empty"></div>
+                        <div class="item-slot empty"></div>
+                    </div>
+                </div>
+
+                <div id="stats">
+                    <h3>📊 Statistiques</h3>
+                    <div class="stat-line">💪 Force: <span id="stat-strength">10</span></div>
+                    <div class="stat-line">🏃 Agilité: <span id="stat-agility">8</span></div>
+                    <div class="stat-line">🧠 Intelligence: <span id="stat-intelligence">12</span></div>
+                    <div class="stat-line">❤️ Vitalité: <span id="stat-vitality">15</span></div>
+                </div>
+
+                <div id="text-controls">
+                    <h3>💬 Actions Textuelles</h3>
+                    <button onclick="game.toggleTextMode()">Activer Chat</button>
+                    <div id="recent-actions">
+                        <div class="action-history">Dernières actions...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="open-world-game.js"></script>
+</body>
+</html>

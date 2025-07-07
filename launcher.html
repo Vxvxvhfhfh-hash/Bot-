@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 Lanceur de Jeux 3D</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .launcher-container {
+            text-align: center;
+            max-width: 800px;
+            padding: 40px;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            color: #ff6b35;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            animation: glow 2s infinite ease-in-out alternate;
+        }
+
+        @keyframes glow {
+            0% { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 107, 53, 0.3); }
+            100% { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 107, 53, 0.8); }
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            margin-bottom: 50px;
+            color: #74b9ff;
+            opacity: 0.9;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .game-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #74b9ff;
+            border-radius: 15px;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .game-card:hover::before {
+            left: 100%;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            border-color: #ff6b35;
+            box-shadow: 0 20px 40px rgba(255, 107, 53, 0.3);
+        }
+
+        .game-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .game-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #ff6b35;
+        }
+
+        .game-description {
+            color: #b2bec3;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .game-features {
+            list-style: none;
+            text-align: left;
+            color: #74b9ff;
+            font-size: 0.9em;
+        }
+
+        .game-features li {
+            margin-bottom: 5px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .game-features li::before {
+            content: '⚡';
+            position: absolute;
+            left: 0;
+        }
+
+        .footer {
+            color: #636e72;
+            font-size: 0.9em;
+            margin-top: 30px;
+        }
+
+        .controls-hint {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            border: 1px solid #74b9ff;
+        }
+
+        .controls-hint h3 {
+            color: #74b9ff;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .game-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="launcher-container">
+        <h1>🎮 Univers 3D Épique</h1>
+        <p class="subtitle">Choisissez votre aventure et préparez-vous au combat !</p>
+        
+        <div class="games-grid">
+            <div class="game-card" onclick="location.href='index.html'">
+                <span class="game-icon">⚔️</span>
+                <h2 class="game-title">Combat Arena 3D</h2>
+                <p class="game-description">
+                    Affrontez des démons dans une arène magique avec des pouvoirs épiques !
+                </p>
+                <ul class="game-features">
+                    <li>Combat en arène focalisé</li>
+                    <li>Pouvoirs magiques spectaculaires</li>
+                    <li>Système d'énergie et cooldowns</li>
+                    <li>Effets visuels intenses</li>
+                    <li>Commandes textuelles françaises</li>
+                </ul>
+            </div>
+            
+            <div class="game-card" onclick="location.href='open-world.html'">
+                <span class="game-icon">🌍</span>
+                <h2 class="game-title">Monde Ouvert 3D</h2>
+                <p class="game-description">
+                    Explorez un vaste monde avec support joystick complet et quêtes !
+                </p>
+                <ul class="game-features">
+                    <li>Support manette PlayStation/Xbox</li>
+                    <li>Terrain procédural immense</li>
+                    <li>Système de quêtes et niveaux</li>
+                    <li>Mini-carte en temps réel</li>
+                    <li>IA ennemie intelligente</li>
+                    <li>Mode texte + contrôles</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="controls-hint">
+            <h3>🎮 Contrôles Universels</h3>
+            <p>
+                <strong>Manette :</strong> Stick gauche (mouvement), Stick droit (caméra), A/X (saut), B/Carré (attaque), Y/Triangle (magie)<br>
+                <strong>Clavier :</strong> WASD (mouvement), Souris (caméra), Espace (saut), Clic (attaque), E (magie)<br>
+                <strong>Texte :</strong> Tapez vos actions en français comme "attaquer", "boule de feu", "soin"
+            </p>
+        </div>
+        
+        <div class="footer">
+            <p>🚀 Moteur 3D optimisé avec Three.js | 🎨 Graphismes immersifs | 🔥 Combats épiques</p>
+        </div>
+    </div>
+</body>
+</html>
