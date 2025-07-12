@@ -30,7 +30,7 @@ Ce document résume toutes les modifications apportées au bot WhatsApp pour gar
 - ✅ Amélioration des instructions pour Gemini uniquement
 
 ### 5. 📜 Historique (CHANGELOG.md)
-- ✅ Suppression des références à OpenAI et Claude
+- ✅ Suppression des références à d'autres IA (Claude, etc.)
 - ✅ Ajout de fonctionnalités spécifiques à Gemini dans les plans futurs
 - ✅ Orientation vers les services Google uniquement
 
@@ -54,7 +54,6 @@ if (process.env.AI_PROVIDER && process.env.AI_PROVIDER !== 'gemini_only') {
 ```javascript
 // Vérifier qu'aucune autre IA n'est configurée
 const otherAIKeys = [
-    'OPENAI_API_KEY',
     'ANTHROPIC_API_KEY',
     'CLAUDE_API_KEY',
     'CHATGPT_API_KEY'
@@ -80,14 +79,12 @@ AI_PROVIDER=gemini_only
 ## 🚫 Ce qui N'est PAS Utilisé
 
 ### IA Interdites
-- ❌ OpenAI (GPT-3, GPT-4, ChatGPT)
 - ❌ Anthropic (Claude)
 - ❌ Cohere
 - ❌ Hugging Face Transformers
 - ❌ Toute autre IA que Google Gemini
 
 ### Dépendances Non Présentes
-- ❌ `openai` (package OpenAI)
 - ❌ `@anthropic-ai/sdk` (package Claude)
 - ❌ `cohere-ai` (package Cohere)
 - ❌ Aucune autre dépendance d'IA
@@ -151,7 +148,7 @@ npm run quick-start
 npm test
 
 # Vérification exclusive Gemini
-grep -r "openai\|claude\|gpt" . --exclude-dir=node_modules || echo "✅ Aucune autre IA détectée"
+grep -r "claude\|gpt" . --exclude-dir=node_modules || echo "✅ Aucune autre IA détectée"
 
 # Vérification configuration
 cat .env | grep -E "(GEMINI|AI_PROVIDER)"

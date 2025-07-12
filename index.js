@@ -73,7 +73,7 @@ class WhatsAppGeminiBot {
             console.log(`🔧 Préfixe: ${this.prefix}`);
             console.log(`🧠 IA: Google Gemini Pro EXCLUSIVEMENT`);
             console.log(`🖼️ Images activées: ${this.enableImages ? 'Oui' : 'Non'}`);
-            console.log('🎯 Aucune autre IA n\'est utilisée (OpenAI, Claude, etc.)');
+            console.log('🎯 Aucune autre IA n\'est utilisée (Claude, etc.)');
         });
 
         this.client.on('message', async (message) => {

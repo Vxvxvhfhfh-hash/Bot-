@@ -73,7 +73,7 @@ IMAGE_PROVIDER=unsplash
 2. Créer une nouvelle clé API
 3. Copier la clé dans `GEMINI_API_KEY`
 
-> ⚠️ **IMPORTANT**: Seule la clé API Google Gemini est requise. N'ajoutez AUCUNE autre clé d'IA (OpenAI, Claude, etc.)
+> ⚠️ **IMPORTANT**: Seule la clé API Google Gemini est requise. N'ajoutez AUCUNE autre clé d'IA (Claude, etc.)
 
 ### Unsplash API (Optionnel)
 1. Créer un compte sur [Unsplash Developers](https://unsplash.com/developers)

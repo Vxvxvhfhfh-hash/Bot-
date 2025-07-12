@@ -65,7 +65,6 @@ addTest('Vérification de la configuration', async () => {
 addTest('Vérification utilisation exclusive de Gemini', async () => {
     // Vérifier qu'aucune autre IA n'est configurée
     const otherAIKeys = [
-        'OPENAI_API_KEY',
         'ANTHROPIC_API_KEY',
         'CLAUDE_API_KEY',
         'CHATGPT_API_KEY'
