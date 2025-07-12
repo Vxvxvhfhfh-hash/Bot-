@@ -5,14 +5,14 @@ import { AIMessage } from '@/types';
 
 export class BotService {
   private messageHistory: Map<string, AIMessage[]> = new Map();
+  private initialized = false;
 
   constructor() {
     this.initializeBot();
   }
 
   private initializeBot() {
-    // Écouter les messages entrants
-    whatsappService.on('message', this.handleIncomingMessage.bind(this));
+    if (this.initialized) return;
     
     // Écouter les événements de connexion
     whatsappService.on('connected', () => {
@@ -23,6 +23,11 @@ export class BotService {
       console.log('Bot WhatsApp déconnecté');
       this.messageHistory.clear();
     });
+
+    // Écouter les messages entrants
+    whatsappService.on('message', this.handleIncomingMessage.bind(this));
+
+    this.initialized = true;
   }
 
   private async handleIncomingMessage(messageData: any) {
@@ -60,7 +65,7 @@ export class BotService {
         history.slice(-10) // Garder seulement les 10 derniers messages
       );
 
-      let imageUrl = null;
+      let imageUrl: string | undefined = undefined;
       
       // Rechercher une image si nécessaire
       if (response.needsImage && config.includeImages && response.imageQuery) {
@@ -123,7 +128,7 @@ export class BotService {
     // Générer une réponse
     const response = await aiService.generateResponse(message, context || []);
 
-    let imageUrl = null;
+    let imageUrl: string | undefined = undefined;
     
     // Rechercher une image si nécessaire
     if (response.needsImage && config.includeImages && response.imageQuery) {
@@ -159,6 +164,26 @@ export class BotService {
     } else {
       this.messageHistory.clear();
     }
+  }
+
+  public getConnectionStatus() {
+    return whatsappService.getConnection();
+  }
+
+  public async connectWhatsApp() {
+    return whatsappService.connect();
+  }
+
+  public async disconnectWhatsApp() {
+    return whatsappService.disconnect();
+  }
+
+  public async getChats() {
+    return whatsappService.getChats();
+  }
+
+  public isWhatsAppConnected(): boolean {
+    return whatsappService.isConnected();
   }
 }
 

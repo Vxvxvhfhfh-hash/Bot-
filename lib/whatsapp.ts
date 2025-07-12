@@ -1,9 +1,9 @@
 import { Client, LocalAuth, MessageMedia } from 'whatsapp-web.js';
 import QRCode from 'qrcode';
-import { EventEmitter } from 'events';
-import { WhatsAppConnection, AIMessage } from '@/types';
+import { eventManager } from './eventManager';
+import { WhatsAppConnection } from '@/types';
 
-export class WhatsAppService extends EventEmitter {
+export class WhatsAppService {
   private client: Client | null = null;
   private connection: WhatsAppConnection = {
     id: 'default',
@@ -11,11 +11,14 @@ export class WhatsAppService extends EventEmitter {
   };
 
   constructor() {
-    super();
     this.initializeClient();
   }
 
   private initializeClient() {
+    if (this.client) {
+      return;
+    }
+
     this.client = new Client({
       authStrategy: new LocalAuth({
         clientId: 'whatsapp-ai-bot'
@@ -30,7 +33,11 @@ export class WhatsAppService extends EventEmitter {
           '--no-first-run',
           '--no-zygote',
           '--single-process',
-          '--disable-gpu'
+          '--disable-gpu',
+          '--disable-extensions',
+          '--disable-default-apps',
+          '--disable-web-security',
+          '--disable-features=TranslateUI'
         ]
       }
     });
@@ -43,13 +50,18 @@ export class WhatsAppService extends EventEmitter {
 
     this.client.on('qr', async (qr: string) => {
       console.log('QR Code received:', qr);
-      const qrImageUrl = await QRCode.toDataURL(qr);
-      this.connection = {
-        ...this.connection,
-        status: 'connecting',
-        qr: qrImageUrl
-      };
-      this.emit('qr', qrImageUrl);
+      try {
+        const qrImageUrl = await QRCode.toDataURL(qr);
+        this.connection = {
+          ...this.connection,
+          status: 'connecting',
+          qr: qrImageUrl
+        };
+        eventManager.emit('qr', qrImageUrl);
+      } catch (error) {
+        console.error('Error generating QR code:', error);
+        eventManager.emit('error', error);
+      }
     });
 
     this.client.on('code', (code: string) => {
@@ -59,7 +71,7 @@ export class WhatsAppService extends EventEmitter {
         status: 'connecting',
         pairingCode: code
       };
-      this.emit('pairingCode', code);
+      eventManager.emit('pairingCode', code);
     });
 
     this.client.on('ready', () => {
@@ -71,12 +83,12 @@ export class WhatsAppService extends EventEmitter {
         qr: undefined,
         pairingCode: undefined
       };
-      this.emit('connected');
+      eventManager.emit('connected');
     });
 
     this.client.on('authenticated', () => {
       console.log('WhatsApp client is authenticated!');
-      this.emit('authenticated');
+      eventManager.emit('authenticated');
     });
 
     this.client.on('auth_failure', (msg: string) => {
@@ -85,7 +97,7 @@ export class WhatsAppService extends EventEmitter {
         ...this.connection,
         status: 'error'
       };
-      this.emit('error', msg);
+      eventManager.emit('error', msg);
     });
 
     this.client.on('disconnected', (reason: string) => {
@@ -94,7 +106,7 @@ export class WhatsAppService extends EventEmitter {
         ...this.connection,
         status: 'disconnected'
       };
-      this.emit('disconnected', reason);
+      eventManager.emit('disconnected', reason);
     });
 
     this.client.on('message', (message: any) => {
@@ -103,20 +115,26 @@ export class WhatsAppService extends EventEmitter {
   }
 
   private async handleIncomingMessage(message: any) {
-    const contact = await message.getContact();
-    const chat = await message.getChat();
-    
-    const messageData = {
-      id: message.id.id,
-      content: message.body,
-      from: contact.name || contact.pushname || contact.number,
-      fromNumber: contact.number,
-      timestamp: new Date(message.timestamp * 1000),
-      isGroup: chat.isGroup,
-      chatId: message.from
-    };
+    try {
+      const contact = await message.getContact();
+      const chat = await message.getChat();
+      
+      const messageData = {
+        id: message.id.id,
+        content: message.body,
+        from: contact.name || contact.pushname || contact.number,
+        fromNumber: contact.number,
+        timestamp: new Date(message.timestamp * 1000),
+        isGroup: chat.isGroup,
+        chatId: message.from,
+        fromMe: message.fromMe
+      };
 
-    this.emit('message', messageData);
+      eventManager.emit('message', messageData);
+    } catch (error) {
+      console.error('Error handling incoming message:', error);
+      eventManager.emit('error', error);
+    }
   }
 
   async connect() {
@@ -126,11 +144,13 @@ export class WhatsAppService extends EventEmitter {
     
     try {
       this.connection.status = 'connecting';
+      eventManager.emit('connecting');
       await this.client!.initialize();
     } catch (error) {
       console.error('Failed to connect WhatsApp:', error);
       this.connection.status = 'error';
-      this.emit('error', error);
+      eventManager.emit('error', error);
+      throw error;
     }
   }
 
@@ -140,7 +160,7 @@ export class WhatsAppService extends EventEmitter {
       this.client = null;
     }
     this.connection.status = 'disconnected';
-    this.emit('disconnected');
+    eventManager.emit('disconnected');
   }
 
   async sendMessage(chatId: string, content: string, imageUrl?: string) {
@@ -184,6 +204,51 @@ export class WhatsAppService extends EventEmitter {
       console.error('Failed to get chats:', error);
       return [];
     }
+  }
+
+  isConnected(): boolean {
+    return this.connection.status === 'connected';
+  }
+
+  // Méthodes pour obtenir les informations du client
+  async getClientInfo() {
+    if (!this.client || !this.isConnected()) {
+      return null;
+    }
+
+    try {
+      const info = this.client.info;
+      return {
+        wid: info.wid,
+        pushname: info.pushname,
+        platform: info.platform,
+        phone: info.phone
+      };
+    } catch (error) {
+      console.error('Failed to get client info:', error);
+      return null;
+    }
+  }
+
+  // Méthode pour redémarrer le client
+  async restart() {
+    try {
+      await this.disconnect();
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      await this.connect();
+    } catch (error) {
+      console.error('Failed to restart WhatsApp client:', error);
+      throw error;
+    }
+  }
+
+  // Méthodes pour gérer les événements
+  on(event: string, callback: (...args: any[]) => void) {
+    eventManager.on(event, callback);
+  }
+
+  off(event: string, callback: (...args: any[]) => void) {
+    eventManager.off(event, callback);
   }
 }
 
