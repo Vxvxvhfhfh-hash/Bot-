@@ -1,0 +1,95 @@
+version: '3.8'
+
+services:
+  whatsapp-gemini-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: whatsapp-gemini-bot:latest
+    container_name: whatsapp-gemini-bot
+    restart: unless-stopped
+    
+    # Variables d'environnement
+    environment:
+      - NODE_ENV=production
+      - TZ=Europe/Paris
+    
+    # Fichier d'environnement
+    env_file:
+      - .env
+    
+    # Volumes pour la persistance des données
+    volumes:
+      - ./data/auth:/app/.wwebjs_auth
+      - ./data/cache:/app/.wwebjs_cache
+      - ./logs:/app/logs
+      - ./temp:/app/temp
+      - ./backups:/app/backups
+    
+    # Ports (optionnel)
+    ports:
+      - "3000:3000"
+    
+    # Limites de ressources
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    
+    # Vérification de santé
+    healthcheck:
+      test: ["CMD", "node", "-e", "console.log('Bot en cours d\\'exécution')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    # Réseau
+    networks:
+      - whatsapp-network
+    
+    # Dépendances (si vous ajoutez une base de données plus tard)
+    # depends_on:
+    #   - redis
+    #   - mongodb
+
+  # Service Redis optionnel pour la mise en cache
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: whatsapp-redis
+  #   restart: unless-stopped
+  #   volumes:
+  #     - redis_data:/data
+  #   networks:
+  #     - whatsapp-network
+  #   command: redis-server --appendonly yes
+
+  # Service MongoDB optionnel pour les données
+  # mongodb:
+  #   image: mongo:6
+  #   container_name: whatsapp-mongo
+  #   restart: unless-stopped
+  #   environment:
+  #     - MONGO_INITDB_ROOT_USERNAME=admin
+  #     - MONGO_INITDB_ROOT_PASSWORD=your_password_here
+  #   volumes:
+  #     - mongodb_data:/data/db
+  #   networks:
+  #     - whatsapp-network
+
+networks:
+  whatsapp-network:
+    driver: bridge
+
+# Volumes nommés optionnels
+volumes:
+  # redis_data:
+  #   driver: local
+  # mongodb_data:
+  #   driver: local
+  whatsapp_data:
+    driver: local
