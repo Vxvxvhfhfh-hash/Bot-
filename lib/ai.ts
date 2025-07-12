@@ -1,9 +1,7 @@
-import OpenAI from 'openai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { AIMessage, BotConfig } from '@/types';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
 
 export class AIService {
   private config: BotConfig = {
@@ -11,9 +9,11 @@ export class AIService {
     autoReply: true,
     replyDelay: 2000,
     includeImages: true,
-    imageKeywords: ['image', 'photo', 'picture', 'show', 'voir', 'photo', 'image'],
-    personalityPrompt: `Tu es un assistant IA amical et serviable qui répond en français. Tu es intégré dans un bot WhatsApp et tu dois répondre de manière naturelle et conversationnelle. Sois concis mais informatif.`
+    imageKeywords: ['image', 'photo', 'picture', 'show', 'voir', 'photo', 'image', 'montrer', 'chercher'],
+    personalityPrompt: `Tu es un assistant IA amical et serviable qui répond en français. Tu es intégré dans un bot WhatsApp et tu dois répondre de manière naturelle et conversationnelle. Sois concis mais informatif. Réponds toujours en français.`
   };
+
+  private model = genAI.getGenerativeModel({ model: 'gemini-pro' });
 
   constructor(config?: Partial<BotConfig>) {
     if (config) {
@@ -34,29 +34,24 @@ export class AIService {
         imageQuery = this.extractImageQuery(message);
       }
 
-      const messages = [
-        {
-          role: 'system' as const,
-          content: this.config.personalityPrompt + (needsImage ? ' Si on te demande une image, tu dois répondre en décrivant ce que tu vas chercher et pourquoi.' : '')
-        },
-        ...context.map(msg => ({
-          role: msg.role as 'user' | 'assistant',
-          content: msg.content
-        })),
-        {
-          role: 'user' as const,
-          content: message
-        }
-      ];
+      // Construire le contexte de conversation
+      let conversationContext = '';
+      if (context.length > 0) {
+        conversationContext = '\n\nContexte de la conversation:\n';
+        context.slice(-3).forEach(msg => {
+          conversationContext += `${msg.role === 'user' ? 'Utilisateur' : 'Assistant'}: ${msg.content}\n`;
+        });
+      }
 
-      const response = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
-        messages: messages,
-        max_tokens: 150,
-        temperature: 0.7,
-      });
+      const prompt = `${this.config.personalityPrompt}${conversationContext}${needsImage ? '\n\nSi on te demande une image, tu dois répondre en décrivant ce que tu vas chercher et pourquoi.' : ''}
 
-      const text = response.choices[0]?.message?.content || 'Désolé, je ne peux pas répondre pour le moment.';
+Message de l'utilisateur: ${message}
+
+Réponds de manière naturelle et conversationnelle en français:`;
+
+      const result = await this.model.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text() || 'Désolé, je ne peux pas répondre pour le moment.';
 
       return {
         text,
@@ -82,7 +77,7 @@ export class AIService {
   private extractImageQuery(message: string): string {
     // Extraire les mots-clés pertinents pour la recherche d'images
     const words = message.toLowerCase().split(' ');
-    const stopWords = ['une', 'un', 'le', 'la', 'les', 'de', 'du', 'des', 'je', 'tu', 'il', 'elle', 'nous', 'vous', 'ils', 'elles', 'pour', 'avec', 'sans', 'sur', 'dans', 'par', 'show', 'me', 'a', 'an', 'the', 'of', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'with', 'by'];
+    const stopWords = ['une', 'un', 'le', 'la', 'les', 'de', 'du', 'des', 'je', 'tu', 'il', 'elle', 'nous', 'vous', 'ils', 'elles', 'pour', 'avec', 'sans', 'sur', 'dans', 'par', 'show', 'me', 'a', 'an', 'the', 'of', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'with', 'by', 'montrer', 'chercher', 'voir'];
     
     const relevantWords = words.filter(word => 
       word.length > 2 && 

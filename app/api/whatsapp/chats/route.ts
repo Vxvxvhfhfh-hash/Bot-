@@ -1,18 +1,18 @@
 import { NextResponse } from 'next/server';
 import { whatsappService } from '@/lib/whatsapp';
 
-export async function POST() {
+export async function GET() {
   try {
-    await whatsappService.disconnect();
-
+    const chats = await whatsappService.getChats();
+    
     return NextResponse.json({
       success: true,
-      message: 'Déconnecté avec succès'
+      chats
     });
   } catch (error) {
-    console.error('Erreur lors de la déconnexion:', error);
+    console.error('Erreur lors de la récupération des chats:', error);
     return NextResponse.json(
-      { error: 'Erreur lors de la déconnexion' },
+      { error: 'Erreur lors de la récupération des chats' },
       { status: 500 }
     );
   }
