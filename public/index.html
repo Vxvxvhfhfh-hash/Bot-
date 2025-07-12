@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bot WhatsApp IA - Contrôle</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fab fa-whatsapp"></i>
+                <h1>Bot WhatsApp IA</h1>
+            </div>
+            <div class="status-indicator">
+                <span id="status-dot" class="status-dot offline"></span>
+                <span id="status-text">Hors ligne</span>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Section de connexion WhatsApp -->
+            <section class="whatsapp-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fab fa-whatsapp"></i> Connexion WhatsApp</h2>
+                    </div>
+                    <div class="card-body">
+                        <div id="connection-area">
+                            <div id="qr-section" class="qr-section hidden">
+                                <h3>Scanner le code QR avec WhatsApp</h3>
+                                <div id="qr-code" class="qr-code"></div>
+                                <p class="qr-instructions">
+                                    1. Ouvrez WhatsApp sur votre téléphone<br>
+                                    2. Allez dans Menu → Appareils connectés<br>
+                                    3. Scannez ce code QR
+                                </p>
+                            </div>
+                            <div id="connection-status" class="connection-status">
+                                <button id="connect-btn" class="btn-primary">
+                                    <i class="fas fa-power-off"></i> Connecter WhatsApp
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section de contrôle des messages -->
+            <section class="messaging-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-robot"></i> Assistant IA</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="message-form">
+                            <div class="form-group">
+                                <label for="phone-number">Numéro de téléphone</label>
+                                <input type="tel" id="phone-number" placeholder="06 12 34 56 78" class="form-input">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="message-prompt">Demande pour l'IA</label>
+                                <textarea id="message-prompt" placeholder="Écrivez votre demande pour l'IA..." class="form-textarea"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="ai-context">Contexte (optionnel)</label>
+                                <input type="text" id="ai-context" placeholder="Contexte de la conversation..." class="form-input">
+                            </div>
+                            
+                            <div class="form-options">
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="include-image" class="checkbox">
+                                    <label for="include-image">Inclure une image</label>
+                                </div>
+                                
+                                <div class="image-options" id="image-options">
+                                    <select id="image-category" class="form-select">
+                                        <option value="nature">Nature</option>
+                                        <option value="technology">Technologie</option>
+                                        <option value="business">Business</option>
+                                        <option value="lifestyle">Lifestyle</option>
+                                        <option value="food">Nourriture</option>
+                                        <option value="travel">Voyage</option>
+                                        <option value="sports">Sports</option>
+                                        <option value="art">Art</option>
+                                        <option value="science">Science</option>
+                                        <option value="animals">Animaux</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button id="generate-btn" class="btn-secondary">
+                                    <i class="fas fa-magic"></i> Générer avec IA
+                                </button>
+                                <button id="send-btn" class="btn-primary" disabled>
+                                    <i class="fas fa-paper-plane"></i> Envoyer
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="generated-message" class="generated-message hidden">
+                            <h4>Message généré par l'IA:</h4>
+                            <div id="ai-message" class="ai-message-content"></div>
+                            <button id="edit-message" class="btn-link">
+                                <i class="fas fa-edit"></i> Modifier
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section de prévisualisation d'image -->
+            <section class="image-preview-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-image"></i> Prévisualisation d'image</h2>
+                    </div>
+                    <div class="card-body">
+                        <div id="image-preview" class="image-preview">
+                            <p>Aucune image sélectionnée</p>
+                        </div>
+                        <div class="image-controls">
+                            <button id="preview-image" class="btn-secondary">
+                                <i class="fas fa-eye"></i> Prévisualiser
+                            </button>
+                            <button id="analyze-image" class="btn-secondary">
+                                <i class="fas fa-search"></i> Analyser avec IA
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section de logs -->
+            <section class="logs-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-list"></i> Historique des messages</h2>
+                        <button id="clear-logs" class="btn-link">
+                            <i class="fas fa-trash"></i> Effacer
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="message-logs" class="message-logs">
+                            <p class="no-messages">Aucun message envoyé</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Section de notifications -->
+        <div id="notifications" class="notifications"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
