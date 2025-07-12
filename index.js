@@ -1,3 +1,16 @@
+/**
+ * 🤖 Bot WhatsApp avec IA Google Gemini
+ * 
+ * Ce bot utilise EXCLUSIVEMENT l'intelligence artificielle Google Gemini
+ * pour les conversations et interactions avec les utilisateurs.
+ * 
+ * Fonctionnalités:
+ * - Conversations intelligentes avec Google Gemini
+ * - Génération d'images stock (Unsplash, Pexels)
+ * - Commandes personnalisées
+ * - Logging et monitoring
+ */
+
 const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const qrcode = require('qrcode-terminal');
@@ -25,7 +38,7 @@ class WhatsAppGeminiBot {
             }
         });
 
-        // Initialiser Gemini AI
+        // Initialiser l'IA Google Gemini (Intelligence Artificielle exclusive)
         this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
         this.model = this.genAI.getGenerativeModel({ model: "gemini-pro" });
 
@@ -58,7 +71,9 @@ class WhatsAppGeminiBot {
             console.log('🤖 Bot WhatsApp Gemini est prêt!');
             console.log(`📋 Nom du bot: ${this.botName}`);
             console.log(`🔧 Préfixe: ${this.prefix}`);
+            console.log(`🧠 IA: Google Gemini Pro EXCLUSIVEMENT`);
             console.log(`🖼️ Images activées: ${this.enableImages ? 'Oui' : 'Non'}`);
+            console.log('🎯 Aucune autre IA n\'est utilisée (OpenAI, Claude, etc.)');
         });
 
         this.client.on('message', async (message) => {
@@ -171,15 +186,15 @@ Développé avec ❤️ en Node.js`;
             // Afficher que le bot est en train de taper
             await chat.sendStateTyping();
 
-            // Préparer le prompt avec contexte
-            const enhancedPrompt = `Vous êtes ${this.botName}, un assistant IA bienveillant et utile sur WhatsApp. 
+            // Préparer le prompt avec contexte pour l'IA Google Gemini
+            const enhancedPrompt = `Vous êtes ${this.botName}, un assistant IA bienveillant et utile sur WhatsApp utilisant l'intelligence artificielle Google Gemini. 
 Répondez de manière concise et amicale à la question suivante:
 
 ${prompt}
 
 Réponse (max ${this.maxMessageLength} caractères):`;
 
-            // Générer la réponse avec Gemini
+            // Générer la réponse avec Google Gemini AI
             const result = await this.model.generateContent(enhancedPrompt);
             const response = await result.response;
             let aiResponse = response.text();
@@ -403,8 +418,18 @@ Réponse (max ${this.maxMessageLength} caractères):`;
 // Vérifier les variables d'environnement obligatoires
 if (!process.env.GEMINI_API_KEY) {
     console.error('❌ ERREUR: La variable GEMINI_API_KEY est requise dans le fichier .env');
+    console.error('🔗 Obtenez votre clé API Gemini sur: https://makersuite.google.com/app/apikey');
     process.exit(1);
 }
+
+// Vérifier l'utilisation exclusive de Gemini
+if (process.env.AI_PROVIDER && process.env.AI_PROVIDER !== 'gemini_only') {
+    console.error('❌ ERREUR: Ce bot utilise UNIQUEMENT l\'IA Google Gemini');
+    console.error('🔧 Vérifiez la variable AI_PROVIDER dans le fichier .env');
+    process.exit(1);
+}
+
+console.log('✅ Configuration Gemini validée - IA Google Gemini EXCLUSIVEMENT');
 
 // Créer et démarrer le bot
 const bot = new WhatsAppGeminiBot();

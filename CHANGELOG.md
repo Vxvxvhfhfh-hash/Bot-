@@ -74,7 +74,6 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Unreleased]
 
 ### 🔄 Planifié
-- Support pour d'autres modèles d'IA (OpenAI, Claude, etc.)
 - Interface web pour la configuration
 - Base de données pour l'historique des conversations
 - Système de plugins
@@ -84,6 +83,8 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Backup automatique des données
 - Support pour les groupes WhatsApp
 - Réponses automatiques programmées
+- Amélioration des modèles Gemini (Gemini Pro Vision, etc.)
+- Intégration avec d'autres services Google (Google Search, etc.)
 
 ### 🐛 Corrections prévues
 - Optimisation de la mémoire pour les longues sessions

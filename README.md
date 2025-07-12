@@ -1,16 +1,26 @@
 # 🤖 Bot WhatsApp Gemini avec Images Stock
 
-Un bot WhatsApp intelligent utilisant l'IA Google Gemini et des images stock media, développé en Node.js.
+Un bot WhatsApp intelligent utilisant **EXCLUSIVEMENT** l'intelligence artificielle Google Gemini et des images stock media, développé en Node.js.
 
 ## 🚀 Fonctionnalités
 
-- **🧠 Intelligence Artificielle**: Powered by Google Gemini Pro
+- **🧠 Intelligence Artificielle**: Powered by Google Gemini Pro UNIQUEMENT
 - **💬 Conversations naturelles**: Réponses contextuelles et intelligentes
 - **🖼️ Images stock**: Intégration avec Unsplash, Pexels et images aléatoires
 - **📱 WhatsApp Web**: Connection facile via QR code
 - **🔧 Commandes personnalisées**: Système de commandes avec préfixe
 - **📊 Logging**: Enregistrement des messages et statistiques
 - **🎯 Réponses contextuelles**: Images suggérées basées sur le contenu
+
+## 🧠 Pourquoi Google Gemini ?
+
+Ce bot utilise **exclusivement** l'intelligence artificielle Google Gemini pour plusieurs raisons :
+
+- **🚀 Performance**: Gemini Pro offre des réponses rapides et précises
+- **🌐 Multilingue**: Support natif de nombreuses langues
+- **🔒 Sécurité**: API sécurisée et fiable de Google
+- **💡 Innovation**: Dernière technologie d'IA de Google
+- **🎯 Spécialisation**: Optimisé pour les conversations naturelles
 
 ## 📋 Prérequis
 
@@ -58,10 +68,12 @@ IMAGE_PROVIDER=unsplash
 
 ## 🔑 Obtenir les clés API
 
-### Google Gemini API
+### Google Gemini API (OBLIGATOIRE)
 1. Aller sur [Google AI Studio](https://makersuite.google.com/app/apikey)
 2. Créer une nouvelle clé API
 3. Copier la clé dans `GEMINI_API_KEY`
+
+> ⚠️ **IMPORTANT**: Seule la clé API Google Gemini est requise. N'ajoutez AUCUNE autre clé d'IA (OpenAI, Claude, etc.)
 
 ### Unsplash API (Optionnel)
 1. Créer un compte sur [Unsplash Developers](https://unsplash.com/developers)

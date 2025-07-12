@@ -61,6 +61,30 @@ addTest('Vérification de la configuration', async () => {
     console.log('   🔑 Configuration de base validée');
 });
 
+// Test 2b: Vérifier l'utilisation exclusive de Gemini
+addTest('Vérification utilisation exclusive de Gemini', async () => {
+    // Vérifier qu'aucune autre IA n'est configurée
+    const otherAIKeys = [
+        'OPENAI_API_KEY',
+        'ANTHROPIC_API_KEY',
+        'CLAUDE_API_KEY',
+        'CHATGPT_API_KEY'
+    ];
+    
+    for (const key of otherAIKeys) {
+        if (process.env[key]) {
+            throw new Error(`Clé API détectée pour une autre IA: ${key}. Ce bot utilise UNIQUEMENT Gemini.`);
+        }
+    }
+    
+    // Vérifier la configuration AI_PROVIDER
+    if (process.env.AI_PROVIDER && process.env.AI_PROVIDER !== 'gemini_only') {
+        throw new Error('AI_PROVIDER doit être "gemini_only" ou non défini');
+    }
+    
+    console.log('   ✅ Utilisation exclusive de Google Gemini confirmée');
+});
+
 // Test 3: Vérifier l'API Gemini
 addTest('Test de l\'API Gemini', async () => {
     const { GoogleGenerativeAI } = require('@google/generative-ai');

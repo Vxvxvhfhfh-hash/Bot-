@@ -3,10 +3,12 @@
 ## 📋 Résumé du Projet
 
 Un bot WhatsApp intelligent qui combine :
-- **🧠 IA Google Gemini** pour les conversations
+- **🧠 IA Google Gemini EXCLUSIVEMENT** pour les conversations
 - **🖼️ Images stock** (Unsplash, Pexels, images aléatoires)
 - **📱 WhatsApp Web.js** pour la connexion
 - **🎯 Commandes personnalisées** avec préfixe
+
+> ⚠️ **IMPORTANT**: Ce bot utilise UNIQUEMENT l'intelligence artificielle Google Gemini. Aucune autre IA (OpenAI, Claude, etc.) n'est utilisée.
 
 ## ⚡ Installation Express (5 minutes)
 
